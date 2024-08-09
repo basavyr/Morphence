@@ -150,7 +150,7 @@ def main(_):
     filename = os.path.join(cwd,"CNN_MNIST.pth")
     torch.save(net.state_dict(),filename)
 
-    print(f'\nTraining MNIST took: {round(time.time()-start,2)} s')
+    print(f'\nTraining MNIST on torch.device({DEVICE}) took: {round(time.time()-start,2)} s')
 
 if __name__ == "__main__":
     flags.DEFINE_integer("nb_epochs", 8, "Number of epochs.")
