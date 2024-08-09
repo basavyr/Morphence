@@ -21,6 +21,8 @@ from cleverhans.torch.attacks.projected_gradient_descent import (
     projected_gradient_descent,
 )
 
+import time
+
 import os
 FLAGS = flags.FLAGS
 
@@ -86,6 +88,7 @@ def ld_mnist(batch_size=128, transform=None,shuffle=True):
 
 
 def main(_):
+    start = time.time()
     # Load training and test data
     data = ld_mnist()
 
@@ -146,9 +149,9 @@ def main(_):
     # save model
     filename = os.path.join(cwd,"CNN_MNIST.pth")
     torch.save(net.state_dict(),filename)
-    
+
+    print(f'\nTraining MNIST took: {round(time.time()-start,2)} s')
 
 if __name__ == "__main__":
     flags.DEFINE_integer("nb_epochs", 8, "Number of epochs.")
-
     app.run(main)
