@@ -87,6 +87,16 @@ def ld_mnist(batch_size=128, transform=None,shuffle=True):
     return EasyDict(train=train_loader, test=test_loader)
 
 
+def mps_enabled() -> bool:
+    """
+    - checks if the current system has support for the Metal programming framework, which allows GPU acceleration in ML applications, such as DNN
+    """
+    platform = os.uname().sysname.strip().lower() # check if current platform is macOS specific (i.e., Darwin)
+    if "darwin" not in platform or not torch.backends.mps.is_available() or not torch.backends.mps.is_built():
+        return False
+    return True
+
+
 def main(_):
     start = time.time()
     # Load training and test data
@@ -95,8 +105,7 @@ def main(_):
     # Instantiate model, loss, and optimizer for training
     net = PyNet(in_channels=1)
 
-    platform = os.uname().sysname.strip().lower() # check if current platform is macOS specific (i.e., Darwin)
-    if "darwin" in platform and torch.backends.mps.is_available():
+    if mps_enabled():
         print('Detected Darwin platform with MPS device...')
         DEVICE = "mps"
     elif torch.cuda.is_available():
